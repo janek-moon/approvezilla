@@ -1,7 +1,7 @@
 # Approvezilla
 
 `Approvezilla`는 AI agent 기반 개발 워크플로를 단계별로 실행하는 Python 오케스트레이터입니다.  
-기획부터 구현, 테스트, 리뷰, 문서화, 종료 브리핑까지 8단계를 관리하며, 이제 CLI뿐 아니라 로컬 웹 운영 콘솔에서도 실행/승인/로그 확인/Jira 연동을 처리할 수 있습니다.
+기획부터 구현, 테스트, 리뷰, 문서화, 종료 브리핑까지 8단계를 관리하며, CLI와 로컬 웹 운영 콘솔에서 실행/승인/로그 확인/설정 관리/Jira 연동을 처리할 수 있습니다.
 
 ## What It Does
 
@@ -16,11 +16,12 @@
 - Jira 계층 이슈 생성
   - Epic / Story / Task / Sub-task
 - 웹 운영 콘솔
-  - 실행 시작/중단
-  - 단계 상태 확인
-  - 실시간 로그 확인
+  - 단계 탭 기반 진행 상황 확인
+  - 현재 단계 결과물 미리보기
+  - 실시간 진행 로그 확인
   - 승인/거절/추가 입력 처리
-  - Jira 연결 테스트 및 tasks 결과 기반 이슈 생성
+  - 설정 탭에서 단계별 agent 선택
+  - Jira on/off, 연결 테스트, tasks 결과 기반 이슈 생성
 
 ## Installation
 
@@ -84,19 +85,19 @@ harness serve --host 127.0.0.1 --port 8000
 
 웹 콘솔은 로컬 단일 사용자 운영 콘솔입니다.
 
-- Run Control
-  - 전체 실행, 특정 stage 실행, from/to 실행, force reset
-- Pending Action
-  - 승인/거절
-  - 피드백 입력
-  - 구현 지시사항 입력
-  - 재시도 여부 결정
+- Stage Tabs
+  - `plan`부터 `close`까지 단계별 탭
+  - 현재 단계 상태와 결과물만 집중해서 확인
+- Result Preview
+  - 현재 단계 산출물 문서 표시
+  - Markdown 결과물은 HTML로 렌더링
 - Live Log
-  - 현재 실행 로그 tail
-  - background run 이벤트 반영
-- Jira Panel
-  - 연결 테스트
-  - tasks 단계 산출물 기반 이슈 생성
+  - 프롬프트 전문이 아니라 진행 로그 중심
+  - stage 시작/완료, approval 대기, command 실행, agent 출력 요약
+- Settings
+  - run/from/to/force 실행 제어
+  - 단계별 agent 선택
+  - Jira on/off 및 연결 정보 관리
 
 실시간 업데이트는 SSE 기반입니다.
 
@@ -123,9 +124,10 @@ agents:
     close: claude
   cli:
     claude: claude -p "{prompt}"
-    codex: codex "{prompt}"
+    codex: codex exec "{prompt}"
     coderabbit: coderabbit review
 jira:
+  enabled: false
   url: null
   email: null
   api_token: null
@@ -140,8 +142,11 @@ paths:
 
 Jira 연동은 `tasks` 단계와 웹 콘솔에서 사용됩니다.
 
+기본값은 비활성화입니다. 먼저 `jira.enabled: true` 또는 웹 설정 탭에서 활성화해야 합니다.
+
 필수 설정:
 
+- `jira.enabled`
 - `jira.url`
 - `jira.email`
 - `jira.api_token`
@@ -236,6 +241,12 @@ harness config --agent implement=codex
 harness serve
 ```
 
+현재 설치된 `harness` 명령에 `serve`가 보이지 않으면 editable install을 다시 해야 합니다.
+
+```bash
+python -m pip install -e .
+```
+
 ## Development
 
 문법 검증:
@@ -266,8 +277,9 @@ mypy harness
 
 - 1차 구현은 로컬 단일 사용자 기준입니다.
 - 웹 콘솔 인증/멀티유저 권한 관리는 아직 없습니다.
-- 웹 테스트는 `fastapi`가 설치된 환경에서만 실행됩니다.
+- 웹 테스트는 `fastapi`, `httpx`가 설치된 환경에서만 실행됩니다.
 - 실제 agent CLI 설치 여부는 별도로 보장되어야 합니다.
+- Markdown 미리보기는 `markdown` 패키지 설치 후 서버 재시작이 필요합니다.
 
 ## Project Structure
 
