@@ -1,6 +1,6 @@
-# agent-harness
+# Approvezilla
 
-`agent-harness`는 AI agent 기반 개발 워크플로를 단계별로 실행하는 Python 오케스트레이터입니다.  
+`Approvezilla`는 AI agent 기반 개발 워크플로를 단계별로 실행하는 Python 오케스트레이터입니다.  
 기획부터 구현, 테스트, 리뷰, 문서화, 종료 브리핑까지 8단계를 관리하며, 이제 CLI뿐 아니라 로컬 웹 운영 콘솔에서도 실행/승인/로그 확인/Jira 연동을 처리할 수 있습니다.
 
 ## What It Does
