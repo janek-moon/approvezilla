@@ -1,0 +1,13 @@
+# Suggested commands
+- Install package: `python -m pip install -e .`
+- Install dev deps: `python -m pip install -e .[dev]`
+- Run harness: `harness run`
+- Run a single stage: `harness run --stage plan`
+- Run a stage range: `harness run --from design --to review`
+- Force rerun stages: `harness run --stage tasks --force`
+- Show status: `harness status`
+- Configure scaffold/defaults: `harness init`
+- Lint: `ruff check .`
+- Type check: `mypy harness`
+- Tests (if/when added): `pytest`
+- Common macOS shell utilities: `git`, `ls`, `cd`, `find`, `grep`/`rg` (if installed)`.

@@ -1,0 +1,40 @@
+.env
+.harness/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# editors
+.idea/
+.vscode/
+
+# virtualenvs
+venv/
+env/
+
+# test / coverage artifacts
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# logs
+*.log
+
+# local overrides
+harness.local.yml
+
+# project-local config
+harness.yml
+
+# generated project docs
+docs/

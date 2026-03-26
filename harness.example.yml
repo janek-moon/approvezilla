@@ -1,0 +1,43 @@
+# ================================================================
+#  agent-harness 설정 파일 예시
+#  이 파일을 harness.yml로 복사 후 수정하세요.
+# ================================================================
+
+project:
+  name: my-project
+  description: "프로젝트 설명을 여기에 입력하세요"
+
+# ── 단계별 Agent 설정 ─────────────────────────────────────────────
+agents:
+  default: claude          # 기본 agent
+
+  stages:
+    plan:      claude      # 1. 기획  — 대화형 기획서 작성
+    design:    claude      # 2. 디자인 — 아키텍처/설계 문서
+    tasks:     claude      # 3. 작업 분할 — Jira 이슈 생성
+    implement: codex       # 4. 구현 — 코드 작성 (codex 또는 claude)
+    test:      claude      # 5. 테스트 — 테스트 코드 생성 및 실행
+    review:    coderabbit  # 6. 리뷰 — 코드 리뷰 (coderabbit 미설치 시 claude로 폴백)
+    docs:      claude      # 7. 문서화 — 문서 최신화
+    close:     claude      # 8. 종료 — 최종 브리핑
+
+  # ── CLI 명령어 템플릿 ───────────────────────────────────────────
+  # {prompt} 는 실제 프롬프트로 치환됩니다.
+  cli:
+    claude:     'claude -p "{prompt}"'
+    codex:      'codex "{prompt}"'
+    coderabbit: 'coderabbit review'
+
+# ── Jira 설정 ─────────────────────────────────────────────────────
+# 환경변수로 설정하거나 아래에 직접 입력 가능
+# (민감 정보는 .env 파일 사용 권장)
+jira:
+  url:         ""       # https://your-org.atlassian.net
+  email:       ""       # your-email@company.com
+  api_token:   ""       # Atlassian API Token (https://id.atlassian.com/manage-profile/security/api-tokens)
+  project_key: ""       # PROJ
+
+# ── 경로 설정 ─────────────────────────────────────────────────────
+paths:
+  docs:  docs           # 기획/설계 문서 저장 디렉터리
+  state: .harness/state.json   # 하네스 상태 파일

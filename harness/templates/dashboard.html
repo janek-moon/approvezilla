@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ config.project.name }} Console</title>
+  <link rel="stylesheet" href="/static/dashboard.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Agent Harness Console</p>
+        <h1>{{ config.project.name }}</h1>
+        <p class="sub">단계별 탭에서 현재 상태와 로그를 보고, 설정 탭에서 실행/Jira/agent 구성을 관리합니다.</p>
+      </div>
+      <div class="run-card">
+        <div>Run status</div>
+        <strong id="run-status">{{ state.run_status }}</strong>
+        <div class="small">Current stage: <span id="current-stage">{{ state.current_stage }}</span></div>
+      </div>
+    </section>
+
+    <nav id="tab-bar" class="tab-bar"></nav>
+
+    <section id="stage-view" class="view active">
+      <div class="stage-layout">
+        <article class="panel stage-panel">
+          <h2 id="stage-title">Stage</h2>
+          <div id="plan-entry" class="plan-entry"></div>
+          <div id="stage-summary" class="stage-summary"></div>
+          <div class="divider"></div>
+          <h3>Current Activity</h3>
+          <div id="pending-box" class="pending empty">현재 대기 중인 액션이 없습니다.</div>
+        </article>
+        <article class="panel result-panel">
+          <h2>Result Preview</h2>
+          <div id="result-box" class="result-box"></div>
+        </article>
+        <article class="panel wide">
+          <div class="panel-head">
+            <h2>Live Log</h2>
+            <span class="small" id="log-stage-label">current run</span>
+          </div>
+          <pre id="log-box" class="log-box">{% for line in state.log_tail %}{{ line }}
+{% endfor %}</pre>
+        </article>
+      </div>
+    </section>
+
+    <section id="settings-view" class="view">
+      <div class="settings-layout">
+        <article class="panel">
+          <h2>Run Control</h2>
+          <div class="row">
+            <input id="run-stage" placeholder="stage (optional)" />
+            <input id="run-from" placeholder="from (optional)" />
+            <input id="run-to" placeholder="to (optional)" />
+          </div>
+          <label class="check"><input id="run-force" type="checkbox" /> force reset</label>
+          <div class="row">
+            <button id="start-run">Run</button>
+            <button id="stop-run" class="ghost">Stop</button>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Stage Agents</h2>
+            <button id="save-config" class="ghost compact">Save Config</button>
+          </div>
+          <div id="agent-settings" class="agent-settings"></div>
+        </article>
+
+        <article class="panel">
+          <h2>Jira</h2>
+          <label class="check"><input id="jira-enabled" type="checkbox" {% if config.jira.enabled %}checked{% endif %} /> enable jira integration</label>
+          <div class="row">
+            <input id="jira-url" placeholder="Jira URL" value="{{ config.jira.url or '' }}" />
+            <input id="jira-email" placeholder="Email" value="{{ config.jira.email or '' }}" />
+          </div>
+          <div class="row">
+            <input id="jira-token" placeholder="API Token" value="{{ config.jira.api_token or '' }}" />
+            <input id="jira-project" placeholder="Project Key" value="{{ config.jira.project_key or '' }}" />
+          </div>
+          <div class="row">
+            <button id="jira-test" class="ghost">Connection Test</button>
+            <button id="jira-create">Create From Tasks</button>
+          </div>
+          <pre id="jira-result" class="mini-log"></pre>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script>
+    window.__BOOTSTRAP__ = {
+      state: {{ state.model_dump_json(indent=2) | safe }},
+      config: {{ config.model_dump_json(indent=2) | safe }}
+    };
+  </script>
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>
