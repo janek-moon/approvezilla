@@ -1,4 +1,4 @@
-# Approvezilla
+# Approvezilla[WIP]
 
 `Approvezilla`는 AI agent 기반 개발 워크플로를 단계별로 실행하는 Python 오케스트레이터입니다.  
 기획부터 구현, 테스트, 리뷰, 문서화, 종료 브리핑까지 8단계를 관리하며, CLI와 로컬 웹 운영 콘솔에서 실행/승인/로그 확인/설정 관리/Jira 연동을 처리할 수 있습니다.
